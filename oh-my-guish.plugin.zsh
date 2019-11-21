@@ -122,6 +122,8 @@ alias kgsecyaml="kubectl get secret -o yaml"
 
 ### Service Accounts
 alias kconfigsa="kubectl view-serviceaccount-kubeconfig"
+alias kgsa="kubectl get serviceaccounts"
+alias kgsaall="kubectl get serviceaccounts --all-namespaces"
 
 ### Ingress
 alias kgiall="kubectl get ingress --all-namespaces"
