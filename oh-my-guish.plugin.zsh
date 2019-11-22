@@ -15,12 +15,26 @@ function kdelpn() {
     kgp | grep $1 | cut -d " " -f 1 | xargs -n 1 -I % kubectl delete pod %
 }
 
-function helm2.13.1() {
-    ~/.helm/older_versions/helm2.13.1 "$@"
-}
-
-function helm2.14.3() {
-    ~/.helm/older_versions/helm2.14.3 "$@"
+function old_helm() {
+    helm_older_versions_path="$HOME/.helm/older_versions/"
+    if [[ ! -d "$helm_older_versions_path" ]]; then
+        if [[ ! -d "$HOME/.helm" ]]; then
+            mkdir $HOME/.helm
+        fi
+        mkdir $HOME/.helm/older_versions
+    fi
+    version="$1"
+    older_version_file="$(echo $helm_older_versions_path)helm$version"
+    if [[ ! -f "$older_version_file" ]]; then
+        curl https://get.helm.sh/helm-v$version-darwin-amd64.tar.gz --output "$older_version_file.tar.gz"
+        tar -xvf "$older_version_file.tar.gz" -C $helm_older_versions_path 
+        rm -rf "$older_version_file.tar.gz"
+        mv "$(echo $helm_older_versions_path)darwin-amd64/helm" $older_version_file
+        rm -rf "$(echo $helm_older_versions_path)darwin-amd64"
+        chmod +x $older_version_file
+    fi
+    helm_command=$(echo "$@" | sed s/"$1"//g)
+    $older_version_file ${helm_command:1}
 }
 
 ## Azure
