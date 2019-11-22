@@ -1,13 +1,13 @@
-# oh-my-guish
+# oh-my-guish <!-- omit in toc -->
 
 My plugin for oh-my-zsh - functions and aliases
 
-## Description
+## Description <!-- omit in toc -->
 
 This plugin is meant to make my workflow more efficient by adding functions and aliases that make sense for me.
 Feel free to use it though :)
 
-## Installation
+## Installation <!-- omit in toc -->
 
 1. Clone the repo to your custom oh-my-zsh plugins:
 
@@ -24,3 +24,32 @@ plugins=(
     helm
 )
 ```
+
+## Features <!-- omit in toc -->
+
+Here's the list of features of this ZSH plugin:
+
+- [Functions](#functions)
+  - [mkdircd](#mkdircd)
+  - [randomdocker](#randomdocker)
+  - [Azure](#azure)
+  - [Kubernetes](#kubernetes)
+- [Aliases](#aliases)
+
+### Functions
+
+Commands to make things easier
+
+#### mkdircd
+This makes a directory and changes the location of the terminal to it.
+#### randomdocker
+This function uses the service from Frightanic to generate random names based on Docker's code.
+#### Azure
+
+
+#### Kubernetes
+
+
+### Aliases
+
+Who wants to type big commands anyways?!
