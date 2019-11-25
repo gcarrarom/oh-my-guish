@@ -87,7 +87,7 @@ function getcredentialsaks() {
 
 function azacc() {
     if [[ -z "$1" ]]; then
-    az account set --subscription "$(az account list -o json | jq -r '.[].name' | fzf)"
+        az account set --subscription "$(az account list -o json | jq -r '.[].name' | fzf)"
     else
         az account set --subscription "$1"
     fi
@@ -121,6 +121,7 @@ alias kgpjson="kubectl get pods -o json"
 alias kgds="kubectl get daemonsets"
 alias kgdsall="kubectl get daemonsets --all-namespaces"
 alias kdelds="kubectl delete daemonsets "
+alias keds="kubectl edit daemonsets "
 
 ### Namespace
 alias kcns="kubectl create namespace"
