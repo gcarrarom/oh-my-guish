@@ -86,7 +86,11 @@ function getcredentialsaks() {
 }
 
 function azacc() {
+    if [[ -z "$1" ]]; then
     az account set --subscription "$(az account list -o json | jq -r '.[].name' | fzf)"
+    else
+        az account set --subscription "$1"
+    fi
     azgroup all
 }
 
