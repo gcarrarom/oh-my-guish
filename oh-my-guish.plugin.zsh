@@ -39,50 +39,36 @@ function old_helm() {
 
 ## Azure
 
-function getcredentialsaks-admin() {
+function getresourcegroup() {
     selected_group=$(az configure --list-defaults | jq ".[] | select(.name == \"group\")")
     if [[ -z "$selected_group" ]]; then
         az account set --subscription $(az account list -o json | jq -r '.[].name' | fzf)
         azgroup
-        clusters=$(az aks list -o json)
-        if [[ $(echo $clusters | jq ". | length") -gt 1 ]]; then
-            clusterName=$(echo $clusters | jq -r '.[] | select(.resourceGroup=="'$resourceGroup'") | .name' | fzf)
-        else
-            clusterName=$(echo $clusters | jq -r '.[].name')
-        fi
-        az aks get-credentials --resource-group $resourceGroup --name $clusterName --admin
-    else
-        clusters=$(az aks list -o json)
-        if [[ $(echo $clusters | jq ". | length") -gt 1 ]]; then
-            clusterName=$(echo $clusters | jq -r '.[] | select(.resourceGroup=="'$resourceGroup'") | .name' | fzf)
-        else
-            clusterName=$(echo $clusters | jq -r '.[].name')
-        fi
-        az aks get-credentials --name $clusterName --admin
+        selected_group=$(az configure --list-defaults | jq ".[] | select(.name == \"group\")")
     fi
+    echo $selected_group
+}
+
+function getclustername() { 
+    clusters=$(az aks list -o json)
+    if [[ $(echo $clusters | jq ". | length") -gt 1 ]]; then
+        clusterName=$(echo $clusters | jq -r '.[].name' | fzf)
+    else
+        clusterName=$(echo $clusters | jq -r '.[].name')
+    fi
+    echo $clusterName
+}
+
+function getcredentialsaks-admin() {
+    getresourcegroup
+    clusterName=$(getclustername)
+    az aks get-credentials --name $clusterName --admin
 }
 
 function getcredentialsaks() {
-    selected_group=$(az configure --list-defaults | jq ".[] | select(.name == \"group\")")
-    if [[ -z "$selected_group" ]]; then
-        az account set --subscription $(az account list -o json | jq -r '.[].name' | fzf)
-        azgroup
-        clusters=$(az aks list -o json)
-        if [[ $(echo $clusters | jq ". | length") -gt 1 ]]; then
-            clusterName=$(echo $clusters | jq -r '.[] | select(.resourceGroup=="'$resourceGroup'") | .name' | fzf)
-        else
-            clusterName=$(echo $clusters | jq -r '.[].name')
-        fi
-        az aks get-credentials --resource-group $resourceGroup --name $clusterName
-    else
-        clusters=$(az aks list -o json)
-        if [[ $(echo $clusters | jq ". | length") -gt 1 ]]; then
-            clusterName=$(echo $clusters | jq -r '.[] | select(.resourceGroup=="'$resourceGroup'") | .name' | fzf)
-        else
-            clusterName=$(echo $clusters | jq -r '.[].name')
-        fi
-        az aks get-credentials --name $clusterName
-    fi
+    getresourcegroup
+    clusterName=$(getclustername)
+    az aks get-credentials --name $clusterName
 }
 
 function azacc() {
