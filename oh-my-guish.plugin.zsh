@@ -161,4 +161,4 @@ alias aacc="az account show -o json | jq -r '.name'"
 alias lock="pmset displaysleepnow"
 
 ## Yoink
-alias yoink="open -a Yoink"
+alias yoink="open -g -a Yoink"
