@@ -41,9 +41,13 @@ Here's the list of features of this ZSH plugin:
     - [azacc](#azacc)
     - [azgroup](#azgroup)
     - [getcredentialsaks](#getcredentialsaks)
-    - [getcredentialsaks](#getcredentialsaks-admin)
+    - [getcredentialsaks-admin](#getcredentialsaks-admin)
   - [Kubernetes](#kubernetes)
 - [Aliases](#aliases)
+  - [Kubernetes](#kubernetes-1)
+  - [MacOS](#macos)
+    - [lock](#lock)
+  - [yoink](#yoink)
 
 ### Functions
 
@@ -73,3 +77,18 @@ This is going to ask for the subscription and resource group of your cluster usi
 ### Aliases
 
 Who wants to type big commands anyways?!
+
+#### Kubernetes
+All the aliases that were missing from the default K8s plugin for oh-my-zsh.
+To create those aliases I've followed the same pattern as the plugin, so it could feel natural to someone already using it.
+This is meant to be an extension rather than substitute the existing k8s plugin.
+
+#### MacOS
+These are the aliases specific for MAcOS.
+##### lock
+This alias locks the computer
+#### yoink
+This alias sends the file selected to yoink, so you don't have to use the cursor to grab files to yoink.
+<p align="center">
+  <img src="https://github.com/gcarrarom/oh-my-guish/blob/master/yoinkdemo.gif">
+</p>
