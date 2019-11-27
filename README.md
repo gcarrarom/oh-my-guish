@@ -2,6 +2,11 @@
 
 My plugin for oh-my-zsh - functions and aliases
 
+
+<p align="center">
+  <img src="https://github.com/gcarrarom/oh-my-guish/blob/master/render1574821975946.gif">
+</p>
+
 ## Description <!-- omit in toc -->
 
 This plugin is meant to make my workflow more efficient by adding functions and aliases that make sense for me.
