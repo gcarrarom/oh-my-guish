@@ -159,3 +159,6 @@ alias aacc="az account show -o json | jq -r '.name'"
 
 ## OSX
 alias lock="pmset displaysleepnow"
+
+## Yoink
+alias yoink="open -a Yoink"
