@@ -11,6 +11,10 @@ function randomdocker(){
 
 ## K8s
 
+function kshell() {
+    kubectl run oh-my-guish-pod -it --rm --image $1
+}
+
 function kdelpn() {
     kgp | grep $1 | cut -d " " -f 1 | xargs -n 1 -I % kubectl delete pod %
 }
