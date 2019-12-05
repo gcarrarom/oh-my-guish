@@ -116,6 +116,7 @@ alias keds="kubectl edit daemonsets "
 ### Namespace
 alias kcns="kubectl create namespace"
 alias kgcurrentnamespace="kubectl config get-contexts | grep $(kubectl config current-context) | rev | cut -d ' ' -f 1 | rev"
+alias kgnswatch="watch -d kubectl get namespaces"
 
 ### Nodes
 alias kgnowatch="watch -d kubectl get nodes"
