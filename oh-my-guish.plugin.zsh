@@ -106,6 +106,8 @@ alias kgpwatchwide="watch -d kubectl get pods -o wide"
 alias kgpallwatch="watch -d kubectl get pods --all-namespaces"
 alias kgpallwatchwide="watch -d kubectl get pods --all-namespaces -o wide"
 alias kgpjson="kubectl get pods -o json"
+alias ktp="kubectl top pods"
+alias ktpwatch="watch -d kubectl top pods"
 
 ### DaemonSets
 alias kgds="kubectl get daemonsets"
