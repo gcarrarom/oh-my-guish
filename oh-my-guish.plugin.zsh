@@ -38,7 +38,8 @@ function old_helm() {
         chmod +x $older_version_file
     fi
     helm_command=$(echo "$@" | sed s/"$1"//g)
-    $older_version_file ${helm_command:1}
+    printf -v arguments_for_command ' %s' "${helm_command[@]}"
+    $older_version_file ${arguments_for_command:1}
 }
 
 ## Azure
@@ -124,6 +125,8 @@ alias kgnswatch="watch -d kubectl get namespaces"
 alias kgnowatch="watch -d kubectl get nodes"
 alias kgnowide="kubectl get nodes -o wide"
 alias kgnowidewatch="watch -d kubectl get nodes -o wide"
+alias ktopno="kubectl top nodes"
+alias ktopnowatch="watch -d kubectl top nodes"
 
 ### Services
 alias kgswatch="watch -d kubectl get services"
