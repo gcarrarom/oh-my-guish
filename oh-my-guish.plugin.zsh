@@ -101,7 +101,7 @@ function azgroup() {
 ### Pods
 alias kgpall="kubectl get pods --all-namespaces"
 alias kgpallwide="kubectl get pods --all-namespaces -o wide"
-alias kdelpallns="kubectl get pods | tail +2 | cut -d ' ' -f 1 | xargs -I % -n 1 -P 10 kubectl delete pod %"
+alias kdelpall="kubectl delete pods --all"
 alias kgpwatch="watch -d kubectl get pods"
 alias kgpwatchwide="watch -d kubectl get pods -o wide"
 alias kgpallwatch="watch -d kubectl get pods --all-namespaces"
