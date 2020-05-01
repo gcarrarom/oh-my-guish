@@ -9,6 +9,15 @@ function randomdocker(){
     curl https://frightanic.com/goodies_content/docker-names.php
 }
 
+function moveallup(){
+    for file in $(ls)
+    do
+        if [[ ! -f $file ]]; then
+            mv ./$file/*.* ./
+        fi
+    done 
+}
+
 ## K8s
 
 function kshell() {
@@ -109,6 +118,7 @@ alias kgpallwatchwide="watch -d kubectl get pods --all-namespaces -o wide"
 alias kgpjson="kubectl get pods -o json"
 alias ktp="kubectl top pods"
 alias ktpwatch="watch -d kubectl top pods"
+alias kpop="echo \"\nHere are your pods, m'lady...\n*Tips Fedora*\n(♡-_-♡)\n\n\" && kgp && echo \"\nヽ(♡‿♡)ノ\""
 
 ### DaemonSets
 alias kgds="kubectl get daemonsets"
