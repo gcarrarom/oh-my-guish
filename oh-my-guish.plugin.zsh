@@ -150,6 +150,12 @@ alias kcns="kubectl create namespace"
 alias kgcurrentnamespace="kubectl config get-contexts | grep $(kubectl config current-context) | rev | cut -d ' ' -f 1 | rev"
 alias kgnswatch="watch -d kubectl get namespaces"
 
+### Deployments
+alias kgdall="kubectl get deployments --all-namespaces"
+alias kgdwatchall="watch -d kubectl get deployments --all-namespaces"
+alias kgdallwatch="watch -d kubectl get deployments --all-namespaces"
+alias kgdwatch="watch -d kubectl get deployments"
+
 ### Nodes
 alias kgnowatch="watch -d kubectl get nodes"
 alias kgnowide="kubectl get nodes -o wide"
