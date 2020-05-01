@@ -20,6 +20,21 @@ function moveallup(){
 
 ## K8s
 
+function holog() {
+    since=$1
+    if [[ -z "$since" ]]; then
+        since="10m"
+    fi
+    hopod=$(kubectl get pods --all-namespaces | tr -s " " | cut -d " " -f 2 | grep helm-operator)
+    if [[ ! -z "$hopod" ]]; then
+        hons=$(kubectl get pods --all-namespaces | grep $hopod | cut -d " " -f 1)
+        kubectl logs -f $hopod -n $hons --since $since
+    else
+        echo "Helm Operator pod not found! ◉_◉"
+    fi
+
+}
+
 function kshell() {
     kubectl run oh-my-guish-pod -it --rm --image $1
 }
