@@ -121,6 +121,10 @@ function azgroup() {
 }
 
 # Aliases
+## Weave Flux
+alias flw="fluxctl --k8s-fwd-ns flux list-workloads"
+alias fsync="fluxctl --k8s-fwd-ns flux sync"
+
 ## K8s
 ### Pods
 alias kgpall="kubectl get pods --all-namespaces"
