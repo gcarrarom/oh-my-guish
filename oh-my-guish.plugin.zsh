@@ -93,6 +93,31 @@ function flw(){
 
 }
 
+function flwall(){
+    flux_configuration_path="$HOME/.flux/"
+    flux_configuration_file_name="config"
+    namespace_selected=$1
+    if [[ ! -d "$flux_configuration_path" ]]; then
+        mkdir $flux_configuration_path
+    fi
+    if [[ ! -f "$flux_configuration_path$flux_configuration_file_name" ]]; then
+        touch $flux_configuration_path$flux_configuration_file_name
+        echo "{}" > $flux_configuration_path$flux_configuration_file_name
+    fi
+    configuration=$(cat $flux_configuration_path$flux_configuration_file_name)
+    if [[ -z "$namespace_selected" ]]; then
+        namespace_selected=$(echo $configuration | jq -r ".namespace")
+        if [[ -z "$namespace_selected" ]]; then
+            fluxctl list-workloads --all-namespaces
+        else
+            fluxctl --k8s-fwd-ns $namespace_selected list-workloads --all-namespaces
+        fi
+    else
+        fluxctl --k8s-fwd-ns $namespace_selected list-workloads --all-namespaces
+    fi
+
+}
+
 function fsync(){
     flux_configuration_path="$HOME/.flux/"
     flux_configuration_file_name="config"
@@ -195,6 +220,9 @@ function azgroup() {
 }
 
 # Aliases
+## Helm
+alias hls="helm list"
+alias hlsall="helm list --all-namespaces"
 
 ## K8s
 ### Pods
@@ -226,6 +254,13 @@ alias kgdall="kubectl get deployments --all-namespaces"
 alias kgdwatchall="watch -d kubectl get deployments --all-namespaces"
 alias kgdallwatch="watch -d kubectl get deployments --all-namespaces"
 alias kgdwatch="watch -d kubectl get deployments"
+
+### HelmReleases
+alias kgh="kubectl get helmreleases"
+alias kghall="kubectl get helmreleases --all-namespaces"
+alias kghallwatch="watch -d kubectl get helmreleases --all-namespaces"
+alias kghwatchall="watch -d kubectl get helmreleases --all-namespaces"
+alias kghwatch="watch -d kubectl get helmreleases"
 
 ### Nodes
 alias kgnowatch="watch -d kubectl get nodes"
