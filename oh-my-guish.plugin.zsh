@@ -1,4 +1,22 @@
 # Functions
+## Math
+
+function avg() {
+    if (( $# == 0 )) ; then
+        array=$(cat)
+    else
+        array=$@
+    fi
+    count=0
+    total=0
+    IFS=$'\n'; arr=( $(echo -e "$array") );for i in ${arr[@]};
+    do
+        total=$(echo $total+$i | bc )
+        ((count++))
+    done
+    echo "scale=2; $total / $count" | bc
+}
+
 ## System
 
 function mkdircd() {
