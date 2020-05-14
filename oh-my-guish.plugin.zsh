@@ -38,6 +38,23 @@ function moveallup(){
 
 ## K8s
 
+function kreport() {
+    topnoderesults=$(ktopno | tail +2 | tr -s " ")
+    allpods=$(kgpall | tail +2)
+    numsystempods=$(echo $allpods | grep kube-system | wc -l)
+    numpodsnotsystem=$(echo $allpods | grep -v kube-system | wc -l)
+    cpupercent=$(echo $topnoderesults | cut -d " " -f 3 | cut -d "%" -f 1 | avg)
+    mempercent=$(echo $topnoderesults | cut -d " " -f 5 | cut -d "%" -f 1 | avg)
+    cpunum=$(echo $topnoderesults | cut -d " " -f 2 | cut -d "m" -f 1 | avg)
+    memnum=$(echo $topnoderesults | cut -d " " -f 4 | cut -d "M" -f 1 | avg)
+    echo "
+    #pods in kube-system:   $numsystempods
+    #pods elsewhere:        $numpodsnotsystem
+    #nodes:                 $(echo e$topnoderesults | wc -l)
+    CPU avg(m cpu): $cpunum = $cpupercent%
+    RAM avg(MB): $memnum = $mempercent%"
+}
+
 function holog() {
     since=$1
     if [[ -z "$since" ]]; then
