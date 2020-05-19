@@ -1,4 +1,11 @@
 # Functions
+## Docker
+
+function docker_build_run() {
+    buildoutput=$(docker build .)
+    echo $buildoutput | tail -1 | cut -d " " -f 3 | xargs -n 1 -I % docker run -p 8080:80 %
+}
+
 ## Math
 
 function avg() {
