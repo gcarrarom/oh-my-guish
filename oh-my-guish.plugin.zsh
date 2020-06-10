@@ -276,6 +276,10 @@ function azgroup() {
 }
 
 # Aliases
+## Python
+alias pip="pip3"
+alias python="python3"
+
 ## Helm
 alias hls="helm list"
 alias hlsall="helm list --all-namespaces"
