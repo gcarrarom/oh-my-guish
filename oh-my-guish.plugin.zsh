@@ -24,6 +24,20 @@ function avg() {
     echo "scale=2; $total / $count" | bc
 }
 
+function math_sum(){
+    if (( $# == 0 )) ; then
+        array=$(cat)
+    else
+        array=$@
+    fi
+    total=0
+    IFS=$'\n'; arr=( $(echo -e "$array") );for i in ${arr[@]};
+    do
+        total=$(echo $total+$i | bc )
+    done
+    echo $total 
+}
+
 ## System
 
 function mkdircd() {
