@@ -60,18 +60,45 @@ function moveallup(){
 ## K8s
 
 function kreport() {
+    # getting data from K8s
     topnoderesults=$(ktopno | tail +2 | tr -s " ")
     allpods=$(kgpall | tail +2)
+    nodeinformation=$(kgno -o json)
+
+    # transforming data
+    numallpods=$(echo $allpods | wc -l)
     numsystempods=$(echo $allpods | grep kube-system | wc -l)
     numpodsnotsystem=$(echo $allpods | grep -v kube-system | wc -l)
     cpupercent=$(echo $topnoderesults | cut -d " " -f 3 | cut -d "%" -f 1 | avg)
     mempercent=$(echo $topnoderesults | cut -d " " -f 5 | cut -d "%" -f 1 | avg)
     cpunum=$(echo $topnoderesults | cut -d " " -f 2 | cut -d "m" -f 1 | avg)
     memnum=$(echo $topnoderesults | cut -d " " -f 4 | cut -d "M" -f 1 | avg)
+    totalcpu=$(echo $nodeinformation | jq -r '.items[].status.capacity.cpu' | math_sum)
+    totalmemory=$(echo "$(echo $nodeinformation | jq -r '.items[].status.capacity.memory' | cut -d 'K' -f 1 | math_sum) /(1024*1024)"| bc)
+    numnodes=$(echo $topnoderesults | wc -l)
+    cpuinuse=$(echo "$totalcpu * $cpupercent / 100" | bc)
+    mcpuinuse=$(echo "$totalcpu * 1000 * $cpupercent / 100" | bc)
+    memoryinuse=$(echo "$totalmemory * $mempercent / 100" | bc)
+    memoryinusemb=$(echo "$totalmemory * 1024 * $mempercent / 100" | bc)
+
+    # output
     echo "
+    #all pods:              $numallpods
     #pods in kube-system:   $numsystempods
     #pods elsewhere:        $numpodsnotsystem
-    #nodes:                 $(echo e$topnoderesults | wc -l)
+    #nodes:                 $numnodes
+
+    Total CPU:              $totalcpu
+    Total Memory(GB):       $totalmemory
+    CPU per Node:           $(echo $totalcpu / $numnodes | bc)
+    Memory per Node:        $(echo $totalmemory / $numnodes | bc)
+
+    CPU in use:             $cpuinuse
+    Memory in use(GB):      $memoryinuse
+
+    mCPU/POD:               $(echo $mcpuinuse / $numallpods | bc)
+    Memory(MB)/POD:         $(echo $memoryinusemb / $numallpods | bc)
+
     CPU avg(m cpu): $cpunum = $cpupercent%
     RAM avg(MB): $memnum = $mempercent%"
 }
