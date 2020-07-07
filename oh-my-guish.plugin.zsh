@@ -325,6 +325,20 @@ alias ktp="kubectl top pods"
 alias ktpwatch="watch -d kubectl top pods"
 alias kpop="echo \"\nHere are your pods, m'lady...\n*Tips Fedora*\n(♡-_-♡)\n\n\" && kgp && echo \"\nヽ(♡‿♡)ノ\""
 
+### CC
+alias kgcc="kubectl get cc"
+alias kgccall="kubectl get cc --all-namespaces"
+alias kdcc="kubectl describe cc"
+alias kdelcc="kubectl delete cc"
+alias kecc="kubectl edit cc"
+
+### HelmReleases
+alias kghr="kubectl get hr"
+alias kghrall="kubectl get hr --all-namespaces"
+alias kdhr="kubectl describe hr"
+alias kdelhr="kubectl delete hr"
+alias kehr="kubectl edit hr"
+
 ### DaemonSets
 alias kgds="kubectl get daemonsets"
 alias kgdsall="kubectl get daemonsets --all-namespaces"
