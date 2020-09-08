@@ -115,6 +115,7 @@ _encode() {
         esac
     done
 }
+
 function holog() {
     since=$1
     if [[ -z "$since" ]]; then
@@ -261,6 +262,49 @@ function fluxns(){
 }
 
 ## Azure
+
+function clone_aad_group_memberships() {
+    unset error
+    if [[ ! -z "$1" ]]; then
+        user_from="$1"
+    else
+        echo "The user you're cloning from cannot be empty!"
+        error=1
+    fi
+    if [[ ! -z "$2" ]]; then
+        user_to="$2"
+    else
+        echo "The user you're cloning to cannot be empty!"
+        error=2
+    fi
+
+    if [[ ! -z "$error" ]]; then
+        return $error
+    fi
+
+    echo "Searching for user $user_from"
+    user_from_id=$(az ad user show --id "$user_from" | jq -r ".objectId")
+    if [[ -z "$user_from_id" ]]; then
+        echo "User $user_from not found in AAD!"
+        return 1
+    fi
+    echo "Searching for user $user_to"
+    user_to_id=$(az ad user show --id "$user_to" | jq -r ".objectId")
+    if [[ -z "$user_to_id" ]]; then
+        echo "User $user_to not found in AAD!"
+        return 1
+    fi
+
+    groups_ids=($(az ad user get-member-groups --id $user_from_id | jq -r '.[].objectId'))
+    group_count=0
+    echo "Adding $user_to to ${#groups_ids[@]} groups"
+    for group_id in $groups_ids; do
+        group_count=$(echo "$group_count + 1" | bc)
+        printf "Adding.... ($group_count/${#groups_ids[@]})\r"
+        az ad group member add --group $group_id --member-id $user_to_id
+    done
+
+}
 
 function getresourcegroup() {
     selected_group=$(az configure --list-defaults | jq ".[] | select(.name == \"group\")")
