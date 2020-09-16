@@ -1,4 +1,9 @@
 # Functions
+
+function lbuild() {
+    python3 ../SwaggerCodegen/buildScripts/build.py local --microservice_name ${1%_SERVER/}; 
+}
+
 ## Docker
 
 function docker_build_run() {
@@ -461,6 +466,9 @@ alias kgcrb="kubectl get clusterrolebindings"
 alias kecrb="kubectl edit clusterrolebinding"
 alias kccrb="kubectl create clusterrolebinding"
 alias kdelcrb="kubectl delete clusterrolebinding"
+
+### Events
+alias kge="kubectl get events --sort-by='.metadata.creationTimestamp'"
 
 ## Azure
 alias aacc="az account show -o json | jq -r '.name'"
