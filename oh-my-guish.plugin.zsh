@@ -64,6 +64,25 @@ function moveallup(){
 
 ## K8s
 
+function kreportns() {
+    toppodsresults=$(ktp | tail +2 | tr -s " ")
+
+    avgcpu=$(echo $toppodsresults | cut -d " " -f 2 | cut -d "m" -f 1 | avg)
+    totalcpu=$(echo $toppodsresults | cut -d " " -f 2 | cut -d "m" -f 1 | math_sum)
+    avgmem=$(echo $toppodsresults | cut -d " " -f 3 | cut -d "M" -f 1 | avg)
+    totalmem=$(echo $toppodsresults | cut -d " " -f 3 | cut -d "M" -f 1 | math_sum)
+
+    echo "
+    NS TOTAL USAGE:
+    Memory (MB) = $totalmem
+    CPU (mCPU)  = $totalcpu
+
+    NS AVG USAGE:
+    Memory (MB) = $avgmem
+    CPU (mCPU)  = $avgcpu
+    "
+}
+
 function kreport() {
     # getting data from K8s
     topnoderesults=$(ktopno | tail +2 | tr -s " ")
