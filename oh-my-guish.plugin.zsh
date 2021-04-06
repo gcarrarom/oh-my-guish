@@ -391,6 +391,19 @@ alias python="python3"
 alias hls="helm list"
 alias hlsall="helm list --all-namespaces"
 
+## Jiractl - https://github.com/gcarrarom/fancy-jira
+
+alias jgi="jira get issues"
+
+alias jci="jira create issue"
+alias jcc="jira create comment"
+
+alias jui="jira update issue"
+
+alias jconfig="jira config show"
+alias jconfigs="jira config set"
+alias jconfigr="jira config remove"
+
 ## K8s
 ### Pods
 alias kgpall="kubectl get pods --all-namespaces"
