@@ -510,9 +510,13 @@ alias lock="pmset displaysleepnow"
 
 ## System
 alias ping="gping"
+alias please="sudo"
 
 ## Yoink
 alias yoink="open -g -a Yoink"
+
+## thefuck - https://github.com/nvbn/thefuck
+alias sorry="fuck"
 
 ## Terminal
 ### Colors
