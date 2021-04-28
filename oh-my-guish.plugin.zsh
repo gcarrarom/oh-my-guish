@@ -511,6 +511,7 @@ alias lock="pmset displaysleepnow"
 ## System
 alias ping="gping"
 alias please="sudo"
+alias copy_last_command="fc -ln -1 | pbcopy"
 
 ## Yoink
 alias yoink="open -g -a Yoink"
