@@ -382,6 +382,19 @@ function azgroup() {
     fi 
 }
 
+## numi
+
+function numi() {
+    if [[ $# == 0 ]] ; then
+        while read -r data ; do
+            numi "${data}"
+        done
+    else
+        curl -G --data-urlencode "q=$@" http://localhost:15055
+        echo ""
+    fi
+}
+
 # Aliases
 ## Python
 alias pip="pip3"
