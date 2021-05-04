@@ -390,12 +390,17 @@ function numi() {
             numi "${data}"
         done
     else
-        curl -G --data-urlencode "q=$@" http://localhost:15055
+        data=$@
+        curl -G --data-urlencode "q=$data" http://localhost:15055
         echo ""
     fi
 }
 
+
 # Aliases
+## Numi
+alias n="numi"
+
 ## Python
 alias pip="pip3"
 alias python="python3"
