@@ -385,7 +385,9 @@ function azgroup() {
 ## numi
 
 function numi() {
-    if [[ $# == 0 ]] ; then
+    if [[ "$@" == "open" ]]; then 
+        open -a numi
+    elif [[ $# == 0 ]] ; then
         while read -r data ; do
             numi "${data}"
         done
