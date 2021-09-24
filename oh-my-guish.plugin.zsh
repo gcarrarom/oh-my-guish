@@ -532,6 +532,7 @@ alias lock="pmset displaysleepnow"
 alias ping="gping"
 alias please="sudo"
 alias copy_last_command="fc -ln -1 | pbcopy"
+alias reload="source ~/.zshrc"
 
 ## Yoink
 alias yoink="open -g -a Yoink"
