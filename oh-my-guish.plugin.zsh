@@ -4,6 +4,13 @@ function lbuild() {
     python3 ../SwaggerCodegen/buildScripts/build.py local --microservice_name ${1%_SERVER/}; 
 }
 
+## Git
+
+function grw() {
+    last_commit=$(git log --oneline | head -n 2 | tail +2 | cut -d " " -f 1)
+    git reset $last_commit
+}
+
 ## Docker
 
 function docker_build_run() {
