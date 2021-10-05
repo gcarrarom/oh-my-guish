@@ -7,8 +7,15 @@ function lbuild() {
 ## Git
 
 function grw() {
-    last_commit=$(git log --oneline | head -n 2 | tail +2 | cut -d " " -f 1)
-    git reset $last_commit
+    git reset $(glc)
+}
+
+function glc() {
+    if [[ -z "$1" ]]; then
+        git log --oneline | head -n 2 | tail +2 | cut -d " " -f 1
+    else
+        git log --oneline | head -n $((2+$1)) | tail +$((2+$1)) | cut -d " " -f 1
+    fi
 }
 
 ## Docker
@@ -407,6 +414,17 @@ function numi() {
 
 
 # Aliases
+
+## Abak https://github.com/gcarrarom/fancy-abak
+alias a='abak'
+alias atl="a timesheet list"
+alias atltotal='atl --show-totals'
+alias atlid='atl --show-id'
+alias ats="a timesheet set"
+alias atd="a timesheet delete"
+alias ata="a timesheet approve"
+alias acs='a context select'
+
 ## Numi
 alias n="numi"
 
