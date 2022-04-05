@@ -554,7 +554,7 @@ alias aacc="az account show -o json | jq -r '.name'"
 alias lock="pmset displaysleepnow"
 
 ## System
-alias ping="gping"
+if command -v gping; then alias ping="gping"; fi
 alias please="sudo"
 alias copy_last_command="fc -ln -1 | pbcopy"
 alias reload="source ~/.zshrc"
