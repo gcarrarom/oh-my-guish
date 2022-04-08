@@ -45,6 +45,7 @@ Here's the list of features of this ZSH plugin:
   - [Kubernetes](#kubernetes)
 - [Aliases](#aliases)
   - [Kubernetes](#kubernetes-1)
+  - [Fancy Abak](#fancy-abak)
   - [MacOS](#macos)
     - [lock](#lock)
   - [yoink](#yoink)
@@ -82,6 +83,12 @@ Who wants to type big commands anyways?!
 All the aliases that were missing from the default K8s plugin for oh-my-zsh.
 To create those aliases I've followed the same pattern as the plugin, so it could feel natural to someone already using it.
 This is meant to be an extension rather than substitute the existing k8s plugin.
+
+#### Fancy Abak
+
+This depends on the installation of the [Fancy Abak tool](https://github.com/gcarrarom/fancy-abak).
+
+To ignore, please set `OHMYGUISH_ABAK_IGNORE=true` on your `.zshrc` file.
 
 #### MacOS
 These are the aliases specific for MAcOS.

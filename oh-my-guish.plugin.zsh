@@ -416,14 +416,16 @@ function numi() {
 # Aliases
 
 ## Abak https://github.com/gcarrarom/fancy-abak
-alias a='abak'
-alias atl="a timesheet list"
-alias atltotal='atl --show-totals'
-alias atlid='atl --show-id'
-alias ats="a timesheet set"
-alias atd="a timesheet delete"
-alias ata="a timesheet approve"
-alias acs='a context select'
+if ! $OHMYGUISH_ABAK_IGNORE; then
+    alias a='abak'
+    alias atl="a timesheet list"
+    alias atltotal='atl --show-totals'
+    alias atlid='atl --show-id'
+    alias ats="a timesheet set"
+    alias atd="a timesheet delete"
+    alias ata="a timesheet approve"
+    alias acs='a context select'
+fi
 
 ## Numi
 alias n="numi"
@@ -554,7 +556,7 @@ alias aacc="az account show -o json | jq -r '.name'"
 alias lock="pmset displaysleepnow"
 
 ## System
-if command -v gping; then alias ping="gping"; fi
+if command -v gping; then alias ping="gping"; fi > /dev/null
 alias please="sudo"
 alias copy_last_command="fc -ln -1 | pbcopy"
 alias reload="source ~/.zshrc"
@@ -563,7 +565,7 @@ alias reload="source ~/.zshrc"
 alias yoink="open -g -a Yoink"
 
 ## thefuck - https://github.com/nvbn/thefuck
-alias sorry="fuck"
+if command -v fuck; then alias sorry="fuck"; fi > /dev/null
 
 ## Terminal
 ### Colors
