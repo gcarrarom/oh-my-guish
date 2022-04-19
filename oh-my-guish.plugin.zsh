@@ -426,10 +426,13 @@ function numi() {
 # Aliases
 
 ## Abak https://github.com/gcarrarom/fancy-abak
-if ! $OHMYGUISH_ABAK_IGNORE; then
+if [[ -z "$OHMYGUISH_ABAK_IGNORE" ]]; then
     alias a='abak'
     alias atl="a timesheet list"
+    alias atlprevious="atl --previous"
     alias atltotal='atl --show-totals'
+    alias atltotalprevious='atl --show-totals --previous'
+    alias atlprevioustotal='atl --show-totals --previous'
     alias atlid='atl --show-id'
     alias ats="a timesheet set"
     alias atd="a timesheet delete"
@@ -450,16 +453,18 @@ alias hlsall="helm list --all-namespaces"
 
 ## Jiractl - https://github.com/gcarrarom/fancy-jira
 
-alias jgi="jira get issues"
+if ! $OHMYGUISH_JIRA_IGNORE; then
+    alias jgi="jira get issues"
 
-alias jci="jira create issue"
-alias jcc="jira create comment"
+    alias jci="jira create issue"
+    alias jcc="jira create comment"
 
-alias jui="jira update issue"
+    alias jui="jira update issue"
 
-alias jconfig="jira config show"
-alias jconfigs="jira config set"
-alias jconfigr="jira config remove"
+    alias jconfig="jira config show"
+    alias jconfigs="jira config set"
+    alias jconfigr="jira config remove"
+fi
 
 ## K8s
 ### Pods
@@ -475,12 +480,15 @@ alias ktp="kubectl top pods"
 alias ktpwatch="watch -d kubectl top pods"
 alias kpop="echo \"\nHere are your pods, m'lady...\n*Tips Fedora*\n(♡-_-♡)\n\n\" && kgp && echo \"\nヽ(♡‿♡)ノ\""
 
-### CC
-alias kgcc="kubectl get cc"
-alias kgccall="kubectl get cc --all-namespaces"
-alias kdcc="kubectl describe cc"
-alias kdelcc="kubectl delete cc"
-alias kecc="kubectl edit cc"
+### CC - Kubernetes Operator for cluster configuration - not open source yet.
+if $OHMYGUISH_CLUSTERCONFIGURATOR_ENABLE; then
+    alias kgcc="kubectl get cc"
+    alias kgccall="kubectl get cc --all-namespaces"
+    alias kdcc="kubectl describe cc"
+    alias kdelcc="kubectl delete cc"
+    alias kecc="kubectl edit cc"
+fi
+
 
 ### HelmReleases
 alias kghr="kubectl get hr"
@@ -488,6 +496,11 @@ alias kghrall="kubectl get hr --all-namespaces"
 alias kdhr="kubectl describe hr"
 alias kdelhr="kubectl delete hr"
 alias kehr="kubectl edit hr"
+alias kgh="kubectl get helmreleases"
+alias kghall="kubectl get helmreleases --all-namespaces"
+alias kghallwatch="watch -d kubectl get helmreleases --all-namespaces"
+alias kghwatchall="watch -d kubectl get helmreleases --all-namespaces"
+alias kghwatch="watch -d kubectl get helmreleases"
 
 ### DaemonSets
 alias kgds="kubectl get daemonsets"
@@ -505,13 +518,6 @@ alias kgdall="kubectl get deployments --all-namespaces"
 alias kgdwatchall="watch -d kubectl get deployments --all-namespaces"
 alias kgdallwatch="watch -d kubectl get deployments --all-namespaces"
 alias kgdwatch="watch -d kubectl get deployments"
-
-### HelmReleases
-alias kgh="kubectl get helmreleases"
-alias kghall="kubectl get helmreleases --all-namespaces"
-alias kghallwatch="watch -d kubectl get helmreleases --all-namespaces"
-alias kghwatchall="watch -d kubectl get helmreleases --all-namespaces"
-alias kghwatch="watch -d kubectl get helmreleases"
 
 ### Nodes
 alias kgnowatch="watch -d kubectl get nodes"

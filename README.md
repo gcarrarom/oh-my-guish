@@ -46,6 +46,7 @@ Here's the list of features of this ZSH plugin:
 - [Aliases](#aliases)
   - [Kubernetes](#kubernetes-1)
   - [Fancy Abak](#fancy-abak)
+  - [Fancy Jira](#fancy-jira)
   - [MacOS](#macos)
     - [lock](#lock)
   - [yoink](#yoink)
@@ -89,6 +90,12 @@ This is meant to be an extension rather than substitute the existing k8s plugin.
 This depends on the installation of the [Fancy Abak tool](https://github.com/gcarrarom/fancy-abak).
 
 To ignore, please set `OHMYGUISH_ABAK_IGNORE=true` on your `.zshrc` file.
+
+#### Fancy Jira
+
+This depends on the installation of the [Fancy Jira tool](https://github.com/gcarrarom/fancy-jira).
+
+To ignore, please set `OHMYGUISH_JIRA_IGNORE=true` on your `.zshrc` file.
 
 #### MacOS
 These are the aliases specific for MAcOS.
