@@ -4,6 +4,16 @@ function lbuild() {
     python3 ../SwaggerCodegen/buildScripts/build.py local --microservice_name ${1%_SERVER/}; 
 }
 
+## Python
+
+function piprequires() {    
+    if [[ -z "$1" ]]; then
+        echo "You are missing the package name!"
+    else
+        pip3 index versions $1 | grep LATEST | cut -d ":" -f 2 | tr -s " " | cut -d " " -f 2 | xargs -n1 -I % curl https://pypi.org/pypi/$1/%/json | jq '.info.requires_dist'
+    fi
+}
+
 ## Git
 
 function grw() {
