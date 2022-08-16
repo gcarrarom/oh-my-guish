@@ -69,6 +69,10 @@ function math_sum(){
 
 ## System
 
+function kill_group() {
+    ps -eo pgid,command | grep $1 | head -n 1 | sed  -r 's/^([^.]+).*$/\1/; s/^[^0-9]*([0-9]+).*$/\1/' | xargs -I % kill -9 -%
+}
+
 function mkdircd() {
     mkdir $1 && cd $1
 }
