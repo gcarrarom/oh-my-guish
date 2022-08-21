@@ -579,7 +579,7 @@ alias lock="pmset displaysleepnow"
 if command -v gping; then alias ping="gping"; fi > /dev/null
 alias please="sudo"
 
-#pbcopy/paste on linux
+# pbcopy/paste on linux
 if command -v apt > /dev/null; then
     alias pbcopy='xsel --clipboard --input'
     alias pbpaste='xsel --clipboard --output'
