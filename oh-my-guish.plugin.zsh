@@ -225,103 +225,104 @@ function old_helm() {
 
 ## Flux
 
-function flw(){
-    flux_configuration_path="$HOME/.flux/"
-    flux_configuration_file_name="config"
-    namespace_selected=$1
-    if [[ ! -d "$flux_configuration_path" ]]; then
-        mkdir $flux_configuration_path
-    fi
-    if [[ ! -f "$flux_configuration_path$flux_configuration_file_name" ]]; then
-        touch $flux_configuration_path$flux_configuration_file_name
-        echo "{}" > $flux_configuration_path$flux_configuration_file_name
-    fi
-    configuration=$(cat $flux_configuration_path$flux_configuration_file_name)
-    if [[ -z "$namespace_selected" ]]; then
-        namespace_selected=$(echo $configuration | jq -r ".namespace")
+if command -v fluxctl > /dev/null; then
+    function flw(){
+        flux_configuration_path="$HOME/.flux/"
+        flux_configuration_file_name="config"
+        namespace_selected=$1
+        if [[ ! -d "$flux_configuration_path" ]]; then
+            mkdir $flux_configuration_path
+        fi
+        if [[ ! -f "$flux_configuration_path$flux_configuration_file_name" ]]; then
+            touch $flux_configuration_path$flux_configuration_file_name
+            echo "{}" > $flux_configuration_path$flux_configuration_file_name
+        fi
+        configuration=$(cat $flux_configuration_path$flux_configuration_file_name)
         if [[ -z "$namespace_selected" ]]; then
-            fluxctl list-workloads -n $(kubectl config get-contexts | grep $(kubectl config current-context) | rev | cut -d ' ' -f 1 | rev)
+            namespace_selected=$(echo $configuration | jq -r ".namespace")
+            if [[ -z "$namespace_selected" ]]; then
+                fluxctl list-workloads -n $(kubectl config get-contexts | grep $(kubectl config current-context) | rev | cut -d ' ' -f 1 | rev)
+            else
+                fluxctl --k8s-fwd-ns $namespace_selected list-workloads -n $(kubectl config get-contexts | grep $(kubectl config current-context) | rev | cut -d ' ' -f 1 | rev)
+            fi
         else
             fluxctl --k8s-fwd-ns $namespace_selected list-workloads -n $(kubectl config get-contexts | grep $(kubectl config current-context) | rev | cut -d ' ' -f 1 | rev)
         fi
-    else
-        fluxctl --k8s-fwd-ns $namespace_selected list-workloads -n $(kubectl config get-contexts | grep $(kubectl config current-context) | rev | cut -d ' ' -f 1 | rev)
-    fi
 
-}
+    }
 
-function flwall(){
-    flux_configuration_path="$HOME/.flux/"
-    flux_configuration_file_name="config"
-    namespace_selected=$1
-    if [[ ! -d "$flux_configuration_path" ]]; then
-        mkdir $flux_configuration_path
-    fi
-    if [[ ! -f "$flux_configuration_path$flux_configuration_file_name" ]]; then
-        touch $flux_configuration_path$flux_configuration_file_name
-        echo "{}" > $flux_configuration_path$flux_configuration_file_name
-    fi
-    configuration=$(cat $flux_configuration_path$flux_configuration_file_name)
-    if [[ -z "$namespace_selected" ]]; then
-        namespace_selected=$(echo $configuration | jq -r ".namespace")
+    function flwall(){
+        flux_configuration_path="$HOME/.flux/"
+        flux_configuration_file_name="config"
+        namespace_selected=$1
+        if [[ ! -d "$flux_configuration_path" ]]; then
+            mkdir $flux_configuration_path
+        fi
+        if [[ ! -f "$flux_configuration_path$flux_configuration_file_name" ]]; then
+            touch $flux_configuration_path$flux_configuration_file_name
+            echo "{}" > $flux_configuration_path$flux_configuration_file_name
+        fi
+        configuration=$(cat $flux_configuration_path$flux_configuration_file_name)
         if [[ -z "$namespace_selected" ]]; then
-            fluxctl list-workloads --all-namespaces
+            namespace_selected=$(echo $configuration | jq -r ".namespace")
+            if [[ -z "$namespace_selected" ]]; then
+                fluxctl list-workloads --all-namespaces
+            else
+                fluxctl --k8s-fwd-ns $namespace_selected list-workloads --all-namespaces
+            fi
         else
             fluxctl --k8s-fwd-ns $namespace_selected list-workloads --all-namespaces
         fi
-    else
-        fluxctl --k8s-fwd-ns $namespace_selected list-workloads --all-namespaces
-    fi
 
-}
+    }
 
-function fsync(){
-    flux_configuration_path="$HOME/.flux/"
-    flux_configuration_file_name="config"
-    namespace_selected=$1
-    if [[ ! -d "$flux_configuration_path" ]]; then
-        mkdir $flux_configuration_path
-    fi
-    if [[ ! -f "$flux_configuration_path$flux_configuration_file_name" ]]; then
-        touch $flux_configuration_path$flux_configuration_file_name
-        echo "{}" > $flux_configuration_path$flux_configuration_file_name
-    fi
-    configuration=$(cat $flux_configuration_path$flux_configuration_file_name)
-    if [[ -z "$namespace_selected" ]]; then
-        namespace_selected=$(echo $configuration | jq -r ".namespace")
+    function fsync(){
+        flux_configuration_path="$HOME/.flux/"
+        flux_configuration_file_name="config"
+        namespace_selected=$1
+        if [[ ! -d "$flux_configuration_path" ]]; then
+            mkdir $flux_configuration_path
+        fi
+        if [[ ! -f "$flux_configuration_path$flux_configuration_file_name" ]]; then
+            touch $flux_configuration_path$flux_configuration_file_name
+            echo "{}" > $flux_configuration_path$flux_configuration_file_name
+        fi
+        configuration=$(cat $flux_configuration_path$flux_configuration_file_name)
         if [[ -z "$namespace_selected" ]]; then
-            fluxctl sync
+            namespace_selected=$(echo $configuration | jq -r ".namespace")
+            if [[ -z "$namespace_selected" ]]; then
+                fluxctl sync
+            else
+                fluxctl --k8s-fwd-ns $namespace_selected sync
+            fi
         else
             fluxctl --k8s-fwd-ns $namespace_selected sync
         fi
-    else
-        fluxctl --k8s-fwd-ns $namespace_selected sync
-    fi
-}
+    }
 
-function fluxns(){
-    flux_configuration_path="$HOME/.flux/"
-    flux_configuration_file_name="config"
-    namespace_selected=$1
-    if [[ ! -d "$flux_configuration_path" ]]; then
-        mkdir $flux_configuration_path
-    fi
-    if [[ ! -f "$flux_configuration_path$flux_configuration_file_name" ]]; then
-        touch $flux_configuration_path$flux_configuration_file_name
-        echo "{}" > $flux_configuration_path$flux_configuration_file_name
-    fi
-    configuration=$(cat $flux_configuration_path$flux_configuration_file_name)
-    if [[ -z "$namespace_selected" ]]; then
-        namespace_selected=$(kubectl get namespaces | cut -d " " -f 1 | tail +2 | fzf)
-    fi
-    if [[ -z "$namespace_selected" ]]; then
-        echo "no namespace selected!"
-    else
-        echo $configuration | jq ".namespace = \"$namespace_selected\"" > $flux_configuration_path$flux_configuration_file_name
-        FLUX_FORWARD_NAMESPACE=$namespace_selected
-    fi
-}
-
+    function fluxns(){
+        flux_configuration_path="$HOME/.flux/"
+        flux_configuration_file_name="config"
+        namespace_selected=$1
+        if [[ ! -d "$flux_configuration_path" ]]; then
+            mkdir $flux_configuration_path
+        fi
+        if [[ ! -f "$flux_configuration_path$flux_configuration_file_name" ]]; then
+            touch $flux_configuration_path$flux_configuration_file_name
+            echo "{}" > $flux_configuration_path$flux_configuration_file_name
+        fi
+        configuration=$(cat $flux_configuration_path$flux_configuration_file_name)
+        if [[ -z "$namespace_selected" ]]; then
+            namespace_selected=$(kubectl get namespaces | cut -d " " -f 1 | tail +2 | fzf)
+        fi
+        if [[ -z "$namespace_selected" ]]; then
+            echo "no namespace selected!"
+        else
+            echo $configuration | jq ".namespace = \"$namespace_selected\"" > $flux_configuration_path$flux_configuration_file_name
+            FLUX_FORWARD_NAMESPACE=$namespace_selected
+        fi
+    }
+fi
 ## Azure
 
 function clone_aad_group_memberships() {
