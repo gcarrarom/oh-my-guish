@@ -399,7 +399,7 @@ function getcredentialsaks() {
     az aks get-credentials --name $clusterName
 }
 
-if ! command -v azacc; then
+if ! command -v azacc > /dev/null; then
 
     function azacc() {
         if [[ -z "$1" ]]; then
@@ -441,7 +441,7 @@ function numi() {
 # Aliases
 
 ## Abak https://github.com/gcarrarom/fancy-abak
-if [[ -z "$OHMYGUISH_ABAK_IGNORE" ]]; then
+if command -v abak > /dev/null; then
     alias a='abak'
     alias atl="a timesheet list"
     alias atlprevious="atl --previous"
