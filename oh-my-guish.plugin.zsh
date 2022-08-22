@@ -470,7 +470,7 @@ alias hlsall="helm list --all-namespaces"
 
 ## Jiractl - https://github.com/gcarrarom/fancy-jira
 
-if ! $OHMYGUISH_JIRA_IGNORE; then
+if command -v jira > /dev/null; then
     alias jgi="jira get issues"
 
     alias jci="jira create issue"
