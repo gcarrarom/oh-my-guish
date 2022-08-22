@@ -14,6 +14,15 @@ function piprequires() {
     fi
 }
 
+function pipsha_download_latest() {    
+    if [[ -z "$1" ]]; then
+        echo "You are missing the package name!"
+    else
+        latest_version=$(pip3 index versions $1 | grep LATEST | cut -d ":" -f 2 | tr -s " " | cut -d " " -f 2)
+        echo $latest_version | xargs -n1 -I % curl https://pypi.org/pypi/$1/%/json | jq -r '.releases."'$latest_version'"[] | select(.packagetype == "sdist") | "\(.digests.sha256) \(.url)"' | xargs zsh -c 'echo "url \"$1\"\nsha256 \"$0\""'
+    fi
+}
+
 ## Git
 
 function grw() {
@@ -390,25 +399,27 @@ function getcredentialsaks() {
     az aks get-credentials --name $clusterName
 }
 
-function azacc() {
-    if [[ -z "$1" ]]; then
-        az account set --subscription "$(az account list -o json | jq -r '.[].name' | fzf)"
-    else
-        az account set --subscription "$1"
-    fi
-    azgroup all
-}
+if ! command -v azacc; then
 
-function azgroup() {
-    if [[ -z "$1" ]]; then
-        group=$(az group list -o json | jq -r '.[].name' | fzf)
-        az configure --defaults group=$group
-    elif [[ "$1" == "all" ]]; then
-        az configure --defaults group=
-    else
-        az configure --defaults group=$1
-    fi 
-}
+    function azacc() {
+        if [[ -z "$1" ]]; then
+            az account set --subscription "$(az account list -o json | jq -r '.[].name' | fzf)"
+        else
+            az account set --subscription "$1"
+        fi
+        azgroup all
+    }
+    function azgroup() {
+        if [[ -z "$1" ]]; then
+            group=$(az group list -o json | jq -r '.[].name' | fzf)
+            az configure --defaults group=$group
+        elif [[ "$1" == "all" ]]; then
+            az configure --defaults group=
+        else
+            az configure --defaults group=$1
+        fi 
+    }
+fi
 
 ## numi
 
@@ -434,6 +445,8 @@ if [[ -z "$OHMYGUISH_ABAK_IGNORE" ]]; then
     alias a='abak'
     alias atl="a timesheet list"
     alias atlprevious="atl --previous"
+    alias atlpreviouswide="atlprevious -o wide"
+    alias atlwideprevious="atlprevious -o wide"
     alias atltotal='atl --show-totals'
     alias atltotalprevious='atl --show-totals --previous'
     alias atlprevioustotal='atl --show-totals --previous'
