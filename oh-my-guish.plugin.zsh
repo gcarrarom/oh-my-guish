@@ -591,6 +591,13 @@ alias lock="pmset displaysleepnow"
 ## System
 if command -v gping; then alias ping="gping"; fi > /dev/null
 alias please="sudo"
+
+# pbcopy/paste on linux
+if command -v apt > /dev/null; then
+    alias pbcopy='xsel --clipboard --input'
+    alias pbpaste='xsel --clipboard --output'
+fi
+
 alias copy_last_command="fc -ln -1 | pbcopy"
 alias reload="source ~/.zshrc"
 
