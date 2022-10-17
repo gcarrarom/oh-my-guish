@@ -101,8 +101,126 @@ function moveallup(){
 
 ## K8s
 
+function convertk8smemory() {
+    KUBERNETES_MEMORY=$1
+    OUTPUT_FORMAT=$2
+    if [[ -z "$OUTPUT_FORMAT" ]]; then
+        OUTPUT_FORMAT="G"
+    fi
+    if [[ "$KUBERNETES_MEMORY" =~ .*"G".* ]]; then
+        if [[ "$KUBERNETES_MEMORY" =~ .*"Gi".* ]]; then
+            KUBERNETES_MEMORY=$(echo "$KUBERNETES_MEMORY" | sed 's/Gi//g')
+            KUBERNETES_MEMORY=$(echo "$KUBERNETES_MEMORY * 1024 * 1024 * 1024" | bc -l)
+        else
+            KUBERNETES_MEMORY=$(echo "$KUBERNETES_MEMORY" | sed 's/G//g')
+            KUBERNETES_MEMORY=$(echo "$KUBERNETES_MEMORY * 1000 * 1000 * 1000" | bc -l)
+        fi
+    elif [[ "$KUBERNETES_MEMORY" =~ .*"M".* ]]; then
+        if [[ "$KUBERNETES_MEMORY" =~ .*"Mi".* ]]; then
+            KUBERNETES_MEMORY=$(echo "$KUBERNETES_MEMORY" | sed 's/Mi//g')
+            KUBERNETES_MEMORY=$(echo "$KUBERNETES_MEMORY * 1024 * 1024" | bc -l)
+        else
+            KUBERNETES_MEMORY=$(echo "$KUBERNETES_MEMORY" | sed 's/M//g')
+            KUBERNETES_MEMORY=$(echo "$KUBERNETES_MEMORY * 1000 * 1000" | bc -l)
+        fi
+    else
+        if [[ "$KUBERNETES_MEMORY" =~ .*"K".* ]]; then
+            KUBERNETES_MEMORY=$(echo "$KUBERNETES_MEMORY" | sed 's/Ki//g')
+            KUBERNETES_MEMORY=$(echo "$KUBERNETES_MEMORY * 1024" | bc -l)
+        else
+            KUBERNETES_MEMORY=$(echo "$KUBERNETES_MEMORY" | sed 's/K//g')
+            KUBERNETES_MEMORY=$(echo "$KUBERNETES_MEMORY * 1000" | bc -l)
+        fi
+    fi
+    
+    if [[ "$OUTPUT_FORMAT" == "G" ]]; then
+        echo "$KUBERNETES_MEMORY / (1000 * 1000 * 1000)" | bc -l
+    elif [[ "$OUTPUT_FORMAT" == "Gi" ]]; then
+        echo "$KUBERNETES_MEMORY / (1024 * 1024 * 1024)" | bc -l
+    elif [[ "$OUTPUT_FORMAT" == "M" ]]; then
+        echo "$KUBERNETES_MEMORY / (1000 * 1000)" | bc -l
+    elif [[ "$OUTPUT_FORMAT" == "Mi" ]]; then
+        echo "$KUBERNETES_MEMORY / (1024 * 1024)" | bc -l
+    elif [[ "$OUTPUT_FORMAT" == "K" ]]; then
+        echo "$KUBERNETES_MEMORY / (1000)" | bc -l
+    elif [[ "$OUTPUT_FORMAT" == "Ki" ]]; then
+        echo "$KUBERNETES_MEMORY / (1024)" | bc -l
+    fi
+
+}
+
+function convertk8scpu() {
+    CPU_KUBERNETES=$1
+    if [[ "$CPU_KUBERNETES" =~ .*"m".* ]]; then
+        CPU_KUBERNETES=$(echo $CPU_KUBERNETES | sed 's/m//g')
+    else
+        CPU_KUBERNETES=$(echo "$CPU_KUBERNETES*1000" | bc -l)
+    fi
+    echo $CPU_KUBERNETES
+}
+
+function kdreq() {
+    namespace=$1
+    if [[ -z "$namespace" ]]; then
+        namespace=$(kubectl config view --minify -o jsonpath='{..namespace}')
+    fi
+
+    deployments=($(kgd -n $namespace -o json | jq -r ".items[].metadata.name"))
+    TOTAL_NS_CPU_REQUEST=0
+    TOTAL_NS_MEMORY_REQUEST=0
+    TOTAL_NS_CPU_LIMIT=0
+    TOTAL_NS_MEMORY_LIMIT=0
+    for deployment in $deployments; do
+        replicas=$(kgd -n $namespace -o json $deployment | jq ".spec.replicas")
+        echo "*** Deployment $deployment: ($replicas replicas) ***"
+        containers=($(kgd -n $namespace -o json $deployment | jq -r ".spec.template.spec.containers[].name"))
+        TOTAL_CPU_REQUEST=0
+        TOTAL_MEMORY_REQUEST=0
+        TOTAL_CPU_LIMIT=0
+        TOTAL_MEMORY_LIMIT=0
+        for container in $containers; do
+            CPU_REQUESTS=$(kgd -n $namespace -o json $deployment | jq -r ".spec.template.spec.containers[] | select(.name == \"$container\") | .resources.requests.cpu")
+            CPU_REQUESTS=$(convertk8scpu $CPU_REQUESTS)
+            MEMORY_REQUESTS=$(kgd -n $namespace -o json $deployment | jq -r ".spec.template.spec.containers[] | select(.name == \"$container\") | .resources.requests.memory")
+            MEMORY_REQUESTS=$(convertk8smemory $MEMORY_REQUESTS)
+            CPU_LIMITS=$(kgd -n $namespace -o json $deployment | jq -r ".spec.template.spec.containers[] | select(.name == \"$container\") | .resources.limits.cpu")
+            CPU_LIMITS=$(convertk8scpu $CPU_LIMITS)
+            MEMORY_LIMITS=$(kgd -n $namespace -o json $deployment | jq -r ".spec.template.spec.containers[] | select(.name == \"$container\") | .resources.limits.memory")
+            MEMORY_LIMITS=$(convertk8smemory $MEMORY_LIMITS)
+            echo "Container $container:"
+            echo "\tRequests: CPU: ${CPU_REQUESTS}m; Memory: ${MEMORY_REQUESTS}G"
+            echo "\tLimits: CPU: ${CPU_LIMITS}m; Memory: ${MEMORY_LIMITS}G"
+            TOTAL_CPU_REQUEST=$(echo "$TOTAL_CPU_REQUEST + ($CPU_REQUESTS * $replicas)" | bc -l)
+            TOTAL_MEMORY_REQUEST=$(echo "$TOTAL_MEMORY_REQUEST + ($MEMORY_REQUESTS * $replicas)" | bc -l)
+            TOTAL_CPU_LIMIT=$(echo "$TOTAL_CPU_LIMIT + ($CPU_LIMITS * $replicas)" | bc -l)
+            TOTAL_MEMORY_LIMIT=$(echo "$TOTAL_MEMORY_LIMIT + ($MEMORY_LIMITS * $replicas)" | bc -l)
+        done
+        echo "
+        TOTAL FOR $deployment:
+            CPU Requests:       ${TOTAL_CPU_REQUEST}m
+            Memory Requests:    ${TOTAL_MEMORY_REQUEST}G
+            CPU Limits:         ${TOTAL_CPU_LIMIT}m
+            Memory Limits:      ${TOTAL_MEMORY_LIMIT}G"
+        TOTAL_NS_CPU_REQUEST=$(echo "$TOTAL_NS_CPU_REQUEST + $TOTAL_CPU_REQUEST" | bc -l)
+        TOTAL_NS_MEMORY_REQUEST=$(echo "$TOTAL_NS_MEMORY_REQUEST + $TOTAL_MEMORY_REQUEST" | bc -l)
+        TOTAL_NS_CPU_LIMIT=$(echo "$TOTAL_NS_CPU_LIMIT + $TOTAL_CPU_LIMIT" | bc -l)
+        TOTAL_NS_MEMORY_LIMIT=$(echo "$TOTAL_NS_MEMORY_LIMIT + $TOTAL_MEMORY_LIMIT" | bc -l)
+    done
+    echo "
+    TOTAL FOR $namespace:
+        CPU Requests:       ${TOTAL_NS_CPU_REQUEST}m
+        Memory Requests:    ${TOTAL_NS_MEMORY_REQUEST}G
+        CPU Limits:         ${TOTAL_NS_CPU_LIMIT}m
+        Memory Limits:      ${TOTAL_NS_MEMORY_LIMIT}G"
+}
+
 function kreportns() {
-    toppodsresults=$(ktp | tail +2 | tr -s " ")
+    namespace=$1
+    if [[ -z "$namespace" ]]; then
+        toppodsresults=$(ktp | tail +2 | tr -s " ")
+    else
+        toppodsresults=$(ktp -n $namespace | tail +2 | tr -s " ")
+    fi
 
     avgcpu=$(echo $toppodsresults | cut -d " " -f 2 | cut -d "m" -f 1 | avg)
     totalcpu=$(echo $toppodsresults | cut -d " " -f 2 | cut -d "m" -f 1 | math_sum)
