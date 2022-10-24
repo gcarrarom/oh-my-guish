@@ -638,6 +638,29 @@ alias kghallwatch="watch -d kubectl get helmreleases --all-namespaces"
 alias kghwatchall="watch -d kubectl get helmreleases --all-namespaces"
 alias kghwatch="watch -d kubectl get helmreleases"
 
+### CertManager
+#### Certificates
+alias kgc="kubectl get certificates"
+alias kgcall="kubectl get certificates -A"
+alias kgcert="kubectl get certificates"
+alias kgcertall="kubectl get certificates -A"
+alias kdc="kubectl describe certificates"
+alias kec="kubectl edit certificates"
+alias kdcert="kubectl describe certificates"
+
+#### Certificate Requests
+alias kgcr="kubectl get certificaterequests"
+alias kgcrall="kubectl get certificaterequests -A"
+alias kdcr="kubectl describe certificaterequests"
+
+#### Issuers
+alias kgiss="kubectl get issuers"
+alias kgissall="kubectl get issuers -A"
+
+#### Cluster Issuers
+alias kgci="kubectl get clusterissuers"
+alias kgciall="kubectl get clusterissuers -A"
+
 ### DaemonSets
 alias kgds="kubectl get daemonsets"
 alias kgdsall="kubectl get daemonsets --all-namespaces"
