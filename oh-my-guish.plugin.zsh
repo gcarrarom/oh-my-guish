@@ -441,6 +441,7 @@ if command -v fluxctl > /dev/null; then
         fi
     }
 fi
+
 ## Azure
 
 function clone_aad_group_memberships() {
@@ -563,13 +564,14 @@ function numi() {
 if command -v abak > /dev/null; then
     alias a='abak'
     alias atl="a timesheet list"
+    alias atlwide="a timesheet list -o wide"
+    alias atlid='atl --show-id'
     alias atlprevious="atl --previous"
     alias atlpreviouswide="atlprevious -o wide"
     alias atlwideprevious="atlprevious -o wide"
     alias atltotal='atl --show-totals'
     alias atltotalprevious='atl --show-totals --previous'
     alias atlprevioustotal='atl --show-totals --previous'
-    alias atlid='atl --show-id'
     alias ats="a timesheet set"
     alias atd="a timesheet delete"
     alias ata="a timesheet approve"
@@ -601,6 +603,44 @@ if command -v jira > /dev/null; then
     alias jconfigs="jira config set"
     alias jconfigr="jira config remove"
 fi
+
+## exa - https://github.com/ogham/exa
+
+if command -v exa > /dev/null; then
+    alias ls="exa"
+    alias la="ls -al"
+fi
+
+## zoxide - https://github.com/ajeetdsouza/zoxide
+
+if command -v z > /dev/null; then
+    alias cd="z"
+fi
+
+## terraform
+
+alias tf="terraform"
+alias tfinit="terraform init"
+alias tfapply="terraform apply"
+alias tfplan="terraform plan"
+
+## Flux
+alias f="flux"
+
+### Helm Releases
+alias fghr="f get hr"
+alias fghrall="f get hr -A"
+
+### Reconcile
+alias fr="f reconcile"
+alias frhr="fr helmrelease"
+alias fri="fr image"
+alias frir="fri repository"
+alias friu="fri update"
+alias frs="fr source"
+alias frsb="frs bucket"
+alias frsg="frs git"
+alias frsh="frs helm"
 
 ## K8s
 ### Pods
