@@ -311,7 +311,11 @@ function holog() {
 }
 
 function kshell() {
-    kubectl run oh-my-guish-pod -it --rm --image $1
+    if [[ -z "$1" ]]; then
+        kubectl run oh-my-guish-pod -it --rm --image gcarrarom/kshell:0.0.17
+    else
+        kubectl run oh-my-guish-pod -it --rm --image $1
+    fi
 }
 
 function kdelpn() {
