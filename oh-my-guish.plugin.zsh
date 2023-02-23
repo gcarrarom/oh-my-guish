@@ -4,6 +4,15 @@ function lbuild() {
     python3 ../SwaggerCodegen/buildScripts/build.py local --microservice_name ${1%_SERVER/}; 
 }
 
+## Yoink Doink
+function yoink() {
+    open -R $1 ; osascript -e 'tell application "System Events" to keystroke "c" using command down'; osascript -e 'tell application "System Events" to keystroke "w" using command down' ; osascript -e 'tell application "System Events" to keystroke tab using command down'
+}
+
+function doink() {
+    open .  ; osascript -e 'tell application "System Events" to keystroke "v" using command down'; osascript -e 'tell application "System Events" to keystroke "w" using command down' ; osascript -e 'tell application "System Events" to keystroke tab using command down'
+}
+
 ## Python
 
 function piprequires() {    
@@ -786,9 +795,6 @@ fi
 
 alias copy_last_command="fc -ln -1 | pbcopy"
 alias reload="source ~/.zshrc"
-
-## Yoink
-alias yoink="open -g -a Yoink"
 
 ## thefuck - https://github.com/nvbn/thefuck
 if command -v fuck; then alias sorry="fuck"; fi > /dev/null
