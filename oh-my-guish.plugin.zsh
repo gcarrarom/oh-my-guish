@@ -573,6 +573,11 @@ function numi() {
 
 # Aliases
 
+## Code Server
+if command -v "code-server" > /dev/null; then
+    alias code='code-server
+fi
+
 ## Abak https://github.com/gcarrarom/fancy-abak
 if command -v abak > /dev/null; then
     alias a='abak'
