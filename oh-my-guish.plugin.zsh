@@ -80,6 +80,11 @@ function math_sum(){
     total=0
     IFS=$'\n'; arr=( $(echo -e "$array") );for i in ${arr[@]};
     do
+        re='^[+-]?[0-9]+([.][0-9]+)?$'
+        if ! [[ $i =~ $re ]] ; then
+            echo "error: '$i' is not a number" >&2
+            break
+        fi
         total=$(echo $total+$i | bc )
     done
     echo $total 
