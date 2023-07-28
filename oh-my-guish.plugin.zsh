@@ -666,6 +666,16 @@ alias frsg="frs git"
 alias frsh="frs helm"
 
 ## K8s
+
+### kubecolor - https://github.com/hidetatz/kubecolor
+
+if command -v kubecolor; then alias kubectl="kubecolor"; compdef kubecolor=kubectl; fi > /dev/null
+
+### Kustomization
+
+alias kgk="kubectl get kustomizations"
+alias kdk="kubectl describe kustomizations"
+
 ### Pods
 alias kgpall="kubectl get pods --all-namespaces"
 alias kgpallwide="kubectl get pods --all-namespaces -o wide"
