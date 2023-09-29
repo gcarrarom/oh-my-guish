@@ -296,6 +296,36 @@ function kreport() {
     RAM avg(MB): $memnum = $mempercent%"
 }
 
+function kreportnode() {
+    node=$1
+    nodeinformation=$(kgno -o json)
+    if [[ -z "$node" ]]; then
+        nodes=$(echo $nodeinformation | jq -r '.items[].metadata.name')
+        if command -v fzf > /dev/null; then
+            node=$(echo $nodes | fzf)
+        else
+            echo "Please call this report with a node from this list:"
+            echo $nodes
+            return 1
+        fi
+    else
+        if [[ -z "$(echo $nodeinformation | jq -r ".items[] | select(.metadata.name == \"$node\")")" ]]; then
+            echo "Node $node not found!"
+            return 1
+        fi
+    fi
+
+    totalcpu=$(echo $nodeinformation | jq -r ".items[] | select(.metadata.name == \"$node\") | .status.capacity.cpu")
+    totalmemory=$(echo "$(echo $nodeinformation | jq -r ".items[] | select(.metadata.name == \"$node\") | .status.capacity.memory" | cut -d 'K' -f 1) /(1024*1024)"| bc)
+
+    echo "
+    Here's the information for $node:
+
+    Total CPU:          $totalcpu
+    Total Memory(Gi):   $totalmemory"
+
+}
+
 _encode() {
     local _length="${#1}"
     for (( _offset = 0 ; _offset < _length ; _offset++ )); do
@@ -669,7 +699,10 @@ alias frsh="frs helm"
 
 ### kubecolor - https://github.com/hidetatz/kubecolor
 
-if command -v kubecolor; then alias kubectl="kubecolor"; compdef kubecolor=kubectl; fi > /dev/null
+if command -v kubecolor; then 
+    alias kubectl="kubecolor" 
+    compdef kubecolor=kubectl
+fi > /dev/null
 
 ### Kustomization
 
